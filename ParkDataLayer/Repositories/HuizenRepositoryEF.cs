@@ -28,7 +28,7 @@ namespace ParkDataLayer.Repositories
         {
             try
             {
-                return HuisMapper.MapToDomain(ctx.Huizen.Where(h => h.Id == id).AsNoTracking().SingleOrDefault());
+                return HuisMapper.MapToDomain(ctx.Huizen.Where(x => x.Id == id).Include(x => x.Park).AsNoTracking().SingleOrDefault());
             }
             catch (Exception ex)
             {
@@ -40,7 +40,7 @@ namespace ParkDataLayer.Repositories
         {
             try
             {
-                return ctx.Huizen.Any(h=>h.Straat.Equals(straat)&&h.Nummer==nummer&&h.Park==ParkMapper.MapToDB(park));
+                return ctx.Huizen.Any(h=>h.Straat==straat&&h.Nummer==nummer&&h.Park.Id==park.Id);
             }
             catch (Exception ex)
             {
@@ -64,7 +64,7 @@ namespace ParkDataLayer.Repositories
         {
             try
             {
-                ctx.Huizen.Update(HuisMapper.MapToDB(huis));
+                ctx.Huizen.Update(HuisMapper.MapToDB(huis, ctx));
                 SaveAndClear();
             }
             catch (Exception ex)
@@ -77,14 +77,10 @@ namespace ParkDataLayer.Repositories
         {
             try
             {
-                Park p = h.Park;
-                ParkEF pEF = ParkMapper.MapToDB(p);
-                ctx.Parken.Add(pEF);
-                HuisEF hsEF = HuisMapper.MapToDB(h);
-                ctx.Huizen.Add(hsEF);
+                HuisEF hEF = HuisMapper.MapToDB(h, ctx);
+                ctx.Huizen.Add(hEF);
                 SaveAndClear();
-                //
-                return h;
+                return HuisMapper.MapToDomain(ctx.Huizen.Where(x=>x.Id== hEF.Id).Include(x=>x.Park).AsNoTracking().SingleOrDefault());//maybe broken?
             }
             catch (Exception ex)
             {

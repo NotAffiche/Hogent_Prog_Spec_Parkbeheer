@@ -29,6 +29,23 @@ public class ParkbeheerContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        //
+        //modelBuilder.Entity<HuisEF>()
+        //    .Property(h => h.Id)
+        //    .ValueGeneratedOnAdd();
+        //modelBuilder.Entity<HuisEF>()
+        //    .HasOne(h=>h.Park)
+        //    .WithMany(p=>p.Huizen)
+        //    .HasForeignKey(h => h.ParkId)
+        //    .OnDelete(DeleteBehavior.Restrict);
+        //modelBuilder.Entity<HuurderEF>()
+        //    .HasMany(h=>h.Huurcontracten)
+        //    .WithOne(hc=>hc.Huurder)
+        //    .HasForeignKey(h=>h.HuurderId) 
+        //    .OnDelete(DeleteBehavior.Restrict);
+        //modelBuilder.Entity<HuisEF>()
+        //    .HasMany(h=>h.Huurcontracten)
+        //    .WithOne(hc=>hc.Huis)
+        //    .HasForeignKey(h=>h.HuisId) 
+        //    .OnDelete(DeleteBehavior.Restrict);
     }
 }

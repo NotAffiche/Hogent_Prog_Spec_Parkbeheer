@@ -27,7 +27,7 @@ public static class ParkMapper
     {
         try
         {
-            return new ParkEF() { Id=dom.Id, Naam=dom.Naam, Locatie=dom.Locatie };
+            return new ParkEF(dom.Id, dom.Naam, dom.Locatie);
         }
         catch (Exception ex)
         {

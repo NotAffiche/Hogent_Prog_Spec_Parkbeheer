@@ -3,6 +3,7 @@ using ParkBusinessLayer.Interfaces;
 using ParkBusinessLayer.Model;
 using ParkDataLayer.Exceptions;
 using ParkDataLayer.Mappers;
+using ParkDataLayer.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,7 +29,7 @@ namespace ParkDataLayer.Repositories
         {
             try
             {
-                return HuurderMapper.MapToDomain(ctx.Huurders.Where(h => h.Id == id).AsNoTracking().SingleOrDefault());
+                return HuurderMapper.MapToDomain(ctx.Huurders.Find(id));
             }
             catch (Exception ex)
             {
@@ -40,7 +41,7 @@ namespace ParkDataLayer.Repositories
         {
             try
             {
-                return ctx.Huurders.Select(h => HuurderMapper.MapToDomain(h)).AsNoTracking().Where(h=>h.Naam.Equals(naam)).ToList();
+                return ctx.Huurders.Where(x=>x.Naam==naam).Select(x=>HuurderMapper.MapToDomain(x)).ToList();
             }
             catch (Exception ex)
             {
@@ -52,7 +53,7 @@ namespace ParkDataLayer.Repositories
         {
             try
             {
-                return ctx.Huurders.Any(h => h.Naam == naam && (h.Email.Equals(contact.Email) && h.Adres.Equals(contact.Adres) && h.Telefoon.Equals(contact.Tel)));
+                return ctx.Huurders.Any(h => h.Naam == naam && h.Email==contact.Email && h.Adres==contact.Adres && h.Telefoon==contact.Tel);
             }
             catch (Exception ex)
             {
@@ -87,13 +88,10 @@ namespace ParkDataLayer.Repositories
 
         public Huurder VoegHuurderToe(Huurder h)
         {
-            ctx.Huurders.Add(HuurderMapper.MapToDB(h));
+            HuurderEF hEF = HuurderMapper.MapToDB(h);
+            ctx.Huurders.Add(hEF);
             SaveAndClear();
-            Huurder toegevoegd = HuurderMapper.MapToDomain(ctx.Huurders.Where(x => (x.Naam == h.Naam) && 
-            (x.Adres.Equals(h.Contactgegevens.Adres) && x.Telefoon.Equals(h.Contactgegevens.Tel) && x.Email.Equals(h.Contactgegevens.Email)))
-                .AsNoTracking().SingleOrDefault());
-            SaveAndClear();
-            return toegevoegd;
+            return HuurderMapper.MapToDomain(ctx.Huurders.Find(hEF.Id));
         }
     }
 }

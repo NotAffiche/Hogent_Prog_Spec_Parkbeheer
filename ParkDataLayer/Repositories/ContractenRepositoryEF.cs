@@ -30,7 +30,7 @@ namespace ParkDataLayer.Repositories
         {
             try
             {
-                ctx.Huurcontracten.Remove(ContractMapper.MapToDB(contract));
+                ctx.Huurcontracten.Remove(ctx.Huurcontracten.Find(contract.Id));
                 SaveAndClear();
             }
             catch(Exception ex)
@@ -43,7 +43,7 @@ namespace ParkDataLayer.Repositories
         {
             try
             {
-                return ContractMapper.MapToDomain(ctx.Huurcontracten.Where(c => c.Id == id).AsNoTracking().SingleOrDefault());
+                return ContractMapper.MapToDomain(ctx.Huurcontracten.Where(x=>x.Id==id).Include(x=>x.Huurder).Include(x=>x.Huis).Include(x=>x.Huis.Park).AsNoTracking().SingleOrDefault());
             }
             catch (Exception ex)
             {
@@ -55,7 +55,7 @@ namespace ParkDataLayer.Repositories
         {
             try
             {
-                return ctx.Huurcontracten.Select(h => ContractMapper.MapToDomain(h)).AsNoTracking().Where(x=>x.Huurperiode.StartDatum==dtBegin&&x.Huurperiode.EindDatum==dtEinde).ToList();
+                return ctx.Huurcontracten.Where(x=>x.StartDatum==dtBegin&&x.EindDatum==dtEinde).Include(x => x.Huurder).Include(x => x.Huis).Include(x => x.Huis.Park).AsNoTracking().Select(x=>ContractMapper.MapToDomain(x)).ToList();
             }
             catch (Exception ex)
             {
@@ -91,7 +91,7 @@ namespace ParkDataLayer.Repositories
         {
             try
             {
-                ctx.Huurcontracten.Update(ContractMapper.MapToDB(contract));
+                ctx.Huurcontracten.Update(ContractMapper.MapToDB(contract, ctx));
                 SaveAndClear();
             }
             catch (Exception ex)
@@ -104,7 +104,7 @@ namespace ParkDataLayer.Repositories
         {
             try
             {
-                ctx.Huurcontracten.Add(ContractMapper.MapToDB(contract));
+                ctx.Huurcontracten.Add(ContractMapper.MapToDB(contract, ctx));
                 SaveAndClear();
             }
             catch (Exception ex)

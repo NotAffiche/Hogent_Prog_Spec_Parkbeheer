@@ -10,6 +10,18 @@ namespace ParkDataLayer.Model;
 
 public class ParkEF
 {
+    public ParkEF()
+    {
+
+    }
+
+    public ParkEF(string id, string naam, string locatie)
+    {
+        Id = id;
+        Naam = naam;
+        Locatie = locatie;
+    }
+
     [Key]
     [Column(TypeName = "nvarchar(20)")]
     public string Id { get; set; }
@@ -18,4 +30,5 @@ public class ParkEF
     public string Naam { get; set; }
     [Column(TypeName = "nvarchar(500)")]
     public string Locatie { get; set; }
+    public ICollection<HuisEF> Huizen { get; set; } = new List<HuisEF>();
 }

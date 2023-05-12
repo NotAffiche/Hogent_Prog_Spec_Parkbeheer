@@ -11,11 +11,11 @@ namespace ParkDataLayer.Mappers;
 
 public static class ContractMapper
 {
-    public static Huurcontract MapToDomain(HuurcontractEF dbhc)
+    public static Huurcontract MapToDomain(HuurcontractEF db)
     {
         try
         {
-            return new Huurcontract(dbhc.Id, new Huurperiode(dbhc.StartDatum, dbhc.AantalDagenVerhuur), HuurderMapper.MapToDomain(dbhc.Huurder), HuisMapper.MapToDomain(dbhc.Huis));
+            return new Huurcontract(db.Id, new Huurperiode(db.StartDatum, db.AantalDagenVerhuur), HuurderMapper.MapToDomain(db.Huurder), HuisMapper.MapToDomain(db.Huis));
         }
         catch (Exception ex)
         {
@@ -23,11 +23,15 @@ public static class ContractMapper
         }
     }
 
-    public static HuurcontractEF MapToDB(Huurcontract dom)
+    public static HuurcontractEF MapToDB(Huurcontract dom, ParkbeheerContext ctx)
     {
         try
         {
-            return new HuurcontractEF() { Id=dom.Id, AantalDagenVerhuur=dom.Huurperiode.Aantaldagen, StartDatum=dom.Huurperiode.StartDatum, EindDatum=dom.Huurperiode.EindDatum, Huis=HuisMapper.MapToDB(dom.Huis), Huurder=HuurderMapper.MapToDB(dom.Huurder) };
+            HuurderEF huurder = ctx.Huurders.Find(dom.Huurder.Id);
+            HuisEF huis = ctx.Huizen.Find(dom.Huis.Id);
+            if (huurder == null) huurder = HuurderMapper.MapToDB(dom.Huurder);
+            if (huis == null) huis = HuisMapper.MapToDB(dom.Huis, ctx);
+            return new HuurcontractEF(dom.Id, dom.Huurperiode.StartDatum, dom.Huurperiode.EindDatum, dom.Huurperiode.Aantaldagen, huurder, huis);
         }
         catch (Exception ex)
         {

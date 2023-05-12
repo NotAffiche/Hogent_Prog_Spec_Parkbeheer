@@ -11,13 +11,29 @@ namespace ParkDataLayer.Model;
 
 public class HuurcontractEF
 {
-    [Required]
+    public HuurcontractEF()
+    {
+
+    }
+
+    public HuurcontractEF(string id, DateTime startDatum, DateTime? eindDatum, int aantalDagenVerhuur, HuurderEF huurder, HuisEF huis)
+    {
+        Id= id;
+        StartDatum= startDatum;
+        EindDatum = eindDatum;
+        AantalDagenVerhuur= aantalDagenVerhuur;
+        Huurder= huurder;
+        Huis= huis;
+    }
+
+    [Key]
     [Column(TypeName = "nvarchar(25)")]
     public string Id { get; set; }
     [Required]
     public DateTime StartDatum { get; set; }
-    [Required]
-    public DateTime EindDatum { get; set; }
+    public DateTime? EindDatum { get; set; }
     [Required]
     public int AantalDagenVerhuur { get; set; }
+    public HuurderEF Huurder { get; set; }
+    public HuisEF Huis { get; set; }
 }

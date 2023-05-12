@@ -11,11 +11,11 @@ namespace ParkDataLayer.Mappers;
 
 public static class HuisMapper
 {
-    public static Huis MapToDomain(HuisEF dbh, ParkEF pef)
+    public static Huis MapToDomain(HuisEF db)
     {
         try
         {
-            return new Huis(dbh.Id, dbh.Straat, dbh.Nummer, dbh.Actief, new Park(pef.Id, pef.Naam, pef.Locatie));
+            return new Huis(db.Id, db.Straat, db.Nummer, db.Actief, ParkMapper.MapToDomain(db.Park));
         }
         catch (Exception ex)
         {
@@ -23,11 +23,13 @@ public static class HuisMapper
         }
     }
 
-    public static HuisEF MapToDB(Huis dom)
+    public static HuisEF MapToDB(Huis dom, ParkbeheerContext ctx)
     {
         try
         {
-            return new HuisEF() { Id=dom.Id, Straat=dom.Straat, Nummer=dom.Nr, Actief=dom.Actief };
+            ParkEF p = ctx.Parken.Find(dom.Park.Id);
+            if (p == null) p = ParkMapper.MapToDB(dom.Park);
+            return new HuisEF(dom.Id, dom.Straat, dom.Nr, dom.Actief, p);
         }
         catch (Exception ex)
         {

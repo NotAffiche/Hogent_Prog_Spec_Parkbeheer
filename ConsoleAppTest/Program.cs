@@ -29,19 +29,19 @@ namespace ConsoleAppTest
             bh.VoegNieuwHuisToe("parklaan", 2, p);
             bh.VoegNieuwHuisToe("parklaan", 3, p);
 
-            //var x = bh.GeefHuis(1);
-            //x.ZetStraat("Kerkstraat");
-            //x.ZetNr(11);
-            //bh.UpdateHuis(x);
-            //bh.ArchiveerHuis(x);
+            var x = bh.GeefHuis(1);
+            x.ZetStraat("Kerkstraat");
+            x.ZetNr(11);
+            bh.UpdateHuis(x);
+            bh.ArchiveerHuis(x);
 
-            //Huis h1 = new Huis();
-            ////ParkDB pdb = new ParkDB("p1", "naam", "locatie");
-            ////HuisDB hdb = new HuisDB("straat", 5, true);
-            ////hdb.Park = pdb;
-            ////ctx.Huizen.Add(hdb);
-            ////ctx.SaveChanges();
-            ////huurder
+            /*//Huis h1 = new Huis();
+            //ParkDB pdb = new ParkDB("p1", "naam", "locatie");
+            //HuisDB hdb = new HuisDB("straat", 5, true);
+            //hdb.Park = pdb;
+            //ctx.Huizen.Add(hdb);
+            //ctx.SaveChanges();
+            //huurder*/
             IHuurderRepository rhuur = new HuurderRepositoryEF(connectionString);
             BeheerHuurders bhuur = new BeheerHuurders(rhuur);
             bhuur.VoegNieuweHuurderToe("jos", new Contactgegevens("email1", "tel", "adres"));
@@ -56,9 +56,9 @@ namespace ConsoleAppTest
             Huis huis = new Huis(1, "Kerkstraat", 5, true, p2);
             bc.MaakContract("c2", hp, h, huis);
 
-            //var y = bc.GeefContract("c2");
-            //var t = bh.GeefHuis(1);
-            //Console.WriteLine(t);
+            var y = bc.GeefContract("c2");
+            var t = bh.GeefHuis(1);
+            Console.WriteLine(t);
         }
     }
 }

@@ -27,7 +27,7 @@ public static class HuurderMapper
     {
         try
         {
-            return new HuurderEF() { Id=dom.Id, Naam=dom.Naam, Adres=dom.Contactgegevens.Adres, Email=dom.Contactgegevens.Email, Telefoon=dom.Contactgegevens.Tel };
+            return new HuurderEF(dom.Id, dom.Naam, dom.Contactgegevens.Tel, dom.Contactgegevens.Email, dom.Contactgegevens.Adres);
         }
         catch (Exception ex)
         {
